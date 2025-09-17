@@ -1,4 +1,5 @@
 weasyprint==58.2
+pydyf==0.7.0
 Flask==2.3.2
 pyswisseph==2.10.3.2
 pandas==2.2.2
