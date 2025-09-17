@@ -1,6 +1,6 @@
-Flask==2.3.2
-weasyprint==59.0
 pydyf==0.3.2
+weasyprint==59.0
+Flask==2.3.2
 pyswisseph==2.10.3.2
 pandas==2.2.2
 astral==3.2
