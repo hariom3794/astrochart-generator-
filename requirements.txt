@@ -1,5 +1,5 @@
 Flask==2.3.2
-weasyprint==59.0
+weasyprint==58.3
 pyswisseph==2.10.3.2
 pandas==2.2.2
 astral==3.2
