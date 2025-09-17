@@ -1,7 +1,7 @@
 # Use Python 3.11 slim image
 FROM python:3.11-slim
 
-# Install system dependencies for WeasyPrint
+# Install system dependencies required by WeasyPrint
 RUN apt-get update && apt-get install -y \
     libcairo2 \
     libpango-1.0-0 \
@@ -20,11 +20,11 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app source
+# Copy app source code
 COPY . .
 
-# Expose port
+# Expose the port your app runs on
 EXPOSE 8080
 
-# Run with Gunicorn (production server)
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080", "--log-level", "debug"]
+# Run the app with Gunicorn
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080", "--workers", "2", "--log-level", "debug"]
