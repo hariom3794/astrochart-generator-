@@ -26,5 +26,5 @@ COPY . .
 # Expose port
 EXPOSE 8080
 
-# Run with Gunicorn
+# Run with Gunicorn (production server)
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"]
