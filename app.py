@@ -11,6 +11,12 @@ from astral.sun import sun
 import openpyxl
 from openpyxl.styles import PatternFill
 
+
+###################################
+from weasyprint import HTML
+import io
+###################################
+
 app = Flask(__name__)
 
 # ==============================================================================
@@ -507,9 +513,51 @@ def generate_sun_moon_report(start_dt_str, end_dt_str):
 
     return df_sun, df_moon
 
+# def generate_pdf(dataframe, title, color_column=None, color_map=None):
+#     if dataframe.empty:
+#         return None
+#     def style_rows(row):
+#         style = ''
+#         if color_column and color_column in row.index and color_map:
+#             value = row[color_column]
+#             if value and value in color_map:
+#                 hex_color = color_map[value]
+#                 style = f'background-color: {hex_color};'
+#         return [style] * len(row)
+#     styled_df = dataframe.style.apply(style_rows, axis=1) if color_column else dataframe.style
+#     html_content = styled_df.hide(axis='index').to_html()
+#     full_html = f"""
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <meta charset="UTF-8">
+#         <title>{title}</title>
+#         <style>
+#             @page {{ size: A4 portrait; margin: 1cm; }}
+#             body {{ font-family: 'Helvetica', 'Arial', sans-serif; }}
+#             h1 {{ text-align: center; color: #333; }}
+#             table {{ border-collapse: collapse; width: 100%; font-size: 10pt; }}
+#             th, td {{ border: 1px solid #cccccc; text-align: left; padding: 8px; }}
+#             th {{ background-color: #f2f2f2; font-weight: bold; }}
+#         </style>
+#     </head>
+#     <body>
+#         <h1>{title}</h1>
+#         {html_content}
+#     </body>
+#     </html>
+#     """
+#     buffer = io.BytesIO()
+#     HTML(string=full_html).write_pdf(buffer)
+#     buffer.seek(0)
+#     return buffer
+
+
 def generate_pdf(dataframe, title, color_column=None, color_map=None):
     if dataframe.empty:
         return None
+
+    # Apply row-wise styling for background colors
     def style_rows(row):
         style = ''
         if color_column and color_column in row.index and color_map:
@@ -518,8 +566,11 @@ def generate_pdf(dataframe, title, color_column=None, color_map=None):
                 hex_color = color_map[value]
                 style = f'background-color: {hex_color};'
         return [style] * len(row)
+
     styled_df = dataframe.style.apply(style_rows, axis=1) if color_column else dataframe.style
     html_content = styled_df.hide(axis='index').to_html()
+
+    # Full HTML document
     full_html = f"""
     <!DOCTYPE html>
     <html>
@@ -541,10 +592,13 @@ def generate_pdf(dataframe, title, color_column=None, color_map=None):
     </body>
     </html>
     """
-    buffer = io.BytesIO()
-    HTML(string=full_html).write_pdf(buffer)
-    buffer.seek(0)
-    return buffer
+
+    # Convert HTML to PDF using WeasyPrint
+    pdf_buffer = io.BytesIO()
+    HTML(string=full_html).write_pdf(pdf_buffer)
+    pdf_buffer.seek(0)
+    return pdf_buffer
+
 
 @app.route('/')
 def index():
