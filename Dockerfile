@@ -17,6 +17,10 @@ WORKDIR /app
 # Copy requirements first for caching
 COPY requirements.txt .
 
+# Add a comment to force a cache bust
+# Cache bust 2025-09-17-0845
+# The date and time will change to match the current time to ensure the cache is invalidated on each push.
+
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
